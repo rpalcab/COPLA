@@ -7,7 +7,9 @@ if [ $# -ne 5 ]; then
     exit 2
 fi
 
-source "$(dirname "${CONDA_EXE%/*}")"/etc/profile.d/conda.sh
+EXE_CONDA_PATH=`which conda`
+
+source "$(dirname $(realpath "${EXE_CONDA_PATH%/*}"))"/etc/profile.d/conda.sh
 conda activate macsyfinder
 
 QRYFILE=$1
@@ -23,6 +25,7 @@ OUTFILE=${OUT_DIR}/'results_tab.tsv'
 OUTFILE_REPORT=${OUT_DIR}/'results_tab.report.tsv'
 OUTFILE_SUMMARY=${OUT_DIR}/'results_tab.summary.tsv'
 
+echo $DB_PATH
 mkdir -p ${OUT_DIR}
 for conj_type in typeF typeB typeC typeFATA typeFA typeG typeI typeT; do
     macsyfinder ${conj_type} \
