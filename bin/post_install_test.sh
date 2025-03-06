@@ -68,6 +68,7 @@ check_conda(){
     fi
 
     CONDA_SHELL_INT="$(dirname "${CONDA_EXE%/*}")"/etc/profile.d/conda.sh
+    echo "Aquí está conda $CONDA_SHELL_INT"
     if [ ! -e "${CONDA_SHELL_INT}" ]; then
         echo "  Error! Please check how conda integrates with your shell"
         echo "         For copla to activate the macsyfinder environment it is assumed that ${CONDA_SHELL_INT} can be sourced"
