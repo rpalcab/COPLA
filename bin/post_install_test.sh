@@ -59,6 +59,7 @@ check_conda(){
     echo "Checking for ${EXE} ..."
 
     EXE_PATH=`which ${EXE}`
+    echo $EXE_PATH
     if [ -z "${EXE_PATH}" ]; then
         echo "  Error! ${EXE} is not in your PATH"
     else
