@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SH_DIR=$(dirname "$0")
+
 main(){
     check_bash
     check_conda
@@ -59,7 +61,6 @@ check_conda(){
     echo "Checking for ${EXE} ..."
 
     EXE_PATH=`which ${EXE}`
-    echo $EXE_PATH
     if [ -z "${EXE_PATH}" ]; then
         echo "  Error! ${EXE} is not in your PATH"
     else
@@ -68,9 +69,7 @@ check_conda(){
         version_check ${VERSION} ${REQUIRED}
     fi
 
-    CONDA_SHELL_INT="$(dirname $(realpath "${CONDA_EXE%/*}"))"/etc/profile.d/conda.sh
-    echo "${CONDA_EXE}"
-    echo "Aquí está conda $CONDA_SHELL_INT"
+    CONDA_SHELL_INT="$(dirname $(realpath "${EXE_PATH%/*}"))"/etc/profile.d/conda.sh
     if [ ! -e "${CONDA_SHELL_INT}" ]; then
         echo "  Error! Please check how conda integrates with your shell"
         echo "         For copla to activate the macsyfinder environment it is assumed that ${CONDA_SHELL_INT} can be sourced"
@@ -217,7 +216,7 @@ check_macsyfinder(){
             version_check ${VERSION} ${REQUIRED}
         fi
     else
-        source "$(dirname "${CONDA_EXE%/*}")"/etc/profile.d/conda.sh
+        source "$(dirname $(realpath "${EXE_CONDA_PATH%/*}"))"/etc/profile.d/conda.sh
         conda activate macsyfinder
 
         EXE_PATH=`which ${EXE}`
@@ -266,7 +265,7 @@ check_ani_rb(){
     EXE='ani.rb'
     echo "Checking for ${EXE} ..."
 
-    EXE_PATH='bin/${EXE}'
+    EXE_PATH="$SH_DIR/${EXE}"
     if [ -z "${EXE_PATH}" ]; then
         echo "  Error! ${EXE} is not in your PATH"
     else
@@ -275,17 +274,17 @@ check_ani_rb(){
 }
 
 test_plasmid_NZ_CP028167(){
-    SEQ_FNA='test/NZ_CP028167.1.fna'
-    SEQ_FAA='test/NZ_CP028167.1.faa'
+    SEQ_FNA="${SH_DIR%/*}/test/NZ_CP028167.1.fna"
+    SEQ_FAA="${SH_DIR%/*}/test/NZ_CP028167.1.faa"
 
-    COPLA_DB=`grep '^COPLA_DB_DIR' copla.ini | cut -f2`
+    COPLA_DB=`grep '^COPLA_DB_DIR' ${SH_DIR%/*}/copla.ini | cut -f2`
     OUTPUT_DIR=${SEQ_FNA}_output
     OUTPUT=${SEQ_FNA}_stdout
     TMP_FILE=${SEQ_FNA}_tmp
 
     echo 'Checking COPLA with plasmid NZ_CP028167.1 ...'
     echo '=========='
-    bin/copla.py ${SEQ_FNA} ${COPLA_DB}/RS84f_sHSBM.pickle ${COPLA_DB}/CoplaDB.fofn ${OUTPUT_DIR} \
+    $SH_DIR/copla.py ${SEQ_FNA} ${SH_DIR%/*}/${COPLA_DB}/RS84f_sHSBM.pickle ${SH_DIR%/*}/${COPLA_DB}/CoplaDB.fofn ${OUTPUT_DIR} \
         -a ${SEQ_FAA} -t circular -k Bacteria -p Proteobacteria -c Gammaproteobacteria -o Enterobacterales \
         -f Enterobacteriaceae -g Escherichia -s 'Escherichia coli' | tee ${TMP_FILE}
     echo '=========='
@@ -299,7 +298,7 @@ test_plasmid_NZ_CP028167(){
 }
 
 test_plasmid_NZ_CP028329(){
-    SEQ_FNA='test/NZ_CP028329.1.fna'
+    SEQ_FNA="${SH_DIR%/*}/test/NZ_CP028329.1.fna"
 
     COPLA_DB=`grep '^COPLA_DB_DIR' copla.ini | cut -f2`
     OUTPUT_DIR=${SEQ_FNA}_output
@@ -308,7 +307,7 @@ test_plasmid_NZ_CP028329(){
 
     echo 'Checking COPLA with plasmid NZ_CP028329.1 ...'
     echo '=========='
-    bin/copla.py ${SEQ_FNA} ${COPLA_DB}/RS84f_sHSBM.pickle ${COPLA_DB}/CoplaDB.fofn ${OUTPUT_DIR} \
+    $SH_DIR/copla.py ${SEQ_FNA} ${SH_DIR%/*}/${COPLA_DB}/RS84f_sHSBM.pickle ${SH_DIR%/*}/${COPLA_DB}/CoplaDB.fofn ${OUTPUT_DIR} \
         -t circular -k Bacteria -p Firmicutes -c Bacilli -o Lactobacillales -f Lactobacillaceae \
         -g Lactobacillus -s 'Lactobacillus sp. D1501' | tee ${TMP_FILE}
     echo '=========='

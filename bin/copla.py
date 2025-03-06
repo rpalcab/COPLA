@@ -50,6 +50,9 @@ parser.add_argument('-s', '--taxSpecies', type=str,
 parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 args = parser.parse_args()
 
+bin_path = os.path.dirname(os.path.realpath(__file__))
+copla_path = '/'.join(bin_path.split('/')[:-1])
+
 def insert_ani_edges(graph, fname):
     idx = {}
     for v in graph.vertices():
@@ -99,7 +102,7 @@ def run_mobscan(fname, outdir):
 
     fname_hmm = os.path.join(outdir, 'hmmscan.log')
     fname_dom = os.path.join(outdir, 'hmmscan.domtblout.log')
-    cmd = ['hmmscan', '--cpu', '9', '--incE', '0.01', '--incdomE', '0.01', '-o', fname_hmm, '--domtblout', fname_dom, 'databases/MOBscan_171004/MOBfamDB', fname]
+    cmd = ['hmmscan', '--cpu', '9', '--incE', '0.01', '--incdomE', '0.01', '-o', fname_hmm, '--domtblout', fname_dom, f'{copla_path}/databases/MOBscan_171004/MOBfamDB', fname]
     # Check output of command to handle those plasmids with an empty ORFeome
     try:
         cp = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
@@ -108,7 +111,7 @@ def run_mobscan(fname, outdir):
         return(mob_label)
 
     fname_out = os.path.join(outdir, 'results_tab.tsv')
-    cmd = ['bin/hmmscan_domtblout_summarize.py', '-e', '0.01', '-i', '0.01', '-c', '0.6', fname_dom, fname_out]
+    cmd = [f'{copla_path}/bin/hmmscan_domtblout_summarize.py', '-e', '0.01', '-i', '0.01', '-c', '0.6', fname_dom, fname_out]
     cp = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     mob = []
@@ -138,7 +141,7 @@ def run_conjscan(fname, outdir, type, topology):
     # Check why using a list does not work
     #cmd = ['bin/check_conjugation_systems.sh', fname, outdir, type, topology, 'databases/MacSyFinder_190530/Conjugation']
     #cp = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
-    cp = subprocess.run('bin/check_conjugation_systems.sh ' + fname + ' ' + outdir + ' ' + type + ' ' + topology + ' databases/MacSyFinder_190530/Conjugation', \
+    cp = subprocess.run(f'{copla_path}/bin/check_conjugation_systems.sh ' + fname + ' ' + outdir + ' ' + type + ' ' + topology + f' {copla_path}/databases/MacSyFinder_190530/Conjugation', \
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
     mpf = []
@@ -168,7 +171,7 @@ def run_pfinder(fname, outdir):
     # To search against last PlasmidFinder database
     #cmd = ['plasmidfinder.py', '-i', fname, '-o', outdir, '-t', '0.80', '-x', '-q']
     # To search against PlasmidFinder database version from 2019/07/31
-    cmd = ['plasmidfinder.py', '-i', fname, '-o', outdir, '-t', '0.80', '-x', '-q', '-p', 'databases/PlasmidFinder_190731', '-d', 'enterobacteriaceae,gram_positive']
+    cmd = ['plasmidfinder.py', '-i', fname, '-o', outdir, '-t', '0.80', '-x', '-q', '-p', f'{copla_path}/databases/PlasmidFinder_190731', '-d', 'enterobacteriaceae,gram_positive']
     cp = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     rep = []
@@ -191,7 +194,7 @@ def run_blastn_card(fname, outdir):
     pathlib.Path(outdir).mkdir(parents=True, exist_ok=True)
 
     fname_out = os.path.join(outdir, 'card.b6')
-    cmd = ['blastn', '-task', 'blastn', '-query', fname, '-db', 'databases/CARD_201015/nucleotide_fasta_protein_homolog_model.fasta', '-evalue', '1e-20',  '-perc_identity', '80', '-culling_limit', '1', '-outfmt', '6', '-out', fname_out]
+    cmd = ['blastn', '-task', 'blastn', '-query', fname, '-db', f'{copla_path}/databases/CARD_201015/nucleotide_fasta_protein_homolog_model.fasta', '-evalue', '1e-20',  '-perc_identity', '80', '-culling_limit', '1', '-outfmt', '6', '-out', fname_out]
     cp = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     amr = []
@@ -542,7 +545,7 @@ g.vp.HRange[v_qry] = qry_null
 g.vertex_properties['HRangeRef'] = g.vp.HRange.copy()
 
 # Populate query edges with database plasmids
-cmd = ['bin/get_ani_identity.pl', fname_fna, args.reflist]
+cmd = [f'{copla_path}/bin/get_ani_identity.pl', fname_fna, args.reflist]
 cp = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 insert_ani_edges(g, fname_fna+'.ani.tsv')
 
