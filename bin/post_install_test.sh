@@ -67,7 +67,7 @@ check_conda(){
         version_check ${VERSION} ${REQUIRED}
     fi
 
-    CONDA_SHELL_INT="$(dirname "${CONDA_EXE%/*}")"/etc/profile.d/conda.sh
+    CONDA_SHELL_INT="$(dirname $(realpath "${CONDA_EXE%/*}"))"/etc/profile.d/conda.sh
     echo "Aquí está conda $CONDA_SHELL_INT"
     if [ ! -e "${CONDA_SHELL_INT}" ]; then
         echo "  Error! Please check how conda integrates with your shell"
