@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
-source "$(dirname "${CONDA_EXE%/*}")"/etc/profile.d/conda.sh
+SH_DIR=$(dirname "$0")
+
+EXE_CONDA_PATH=`which conda`
+source "$(dirname $(realpath "${EXE_CONDA_PATH%/*}"))"/etc/profile.d/conda.sh
 conda activate copla
 
 # NZ_CP028167.1
-bin/copla.py test/NZ_CP028167.1.fna \
-        databases/Copla_RS84/RS84f_sHSBM.pickle \
-        databases/Copla_RS84/CoplaDB.fofn \
-        test/NZ_CP028167.1.fna_output \
+${SH_DIR%/*}/bin/copla.py ${SH_DIR%/*}/test/NZ_CP028167.1.fna \
+        ${SH_DIR%/*}/databases/Copla_RS84/RS84f_sHSBM.pickle \
+        ${SH_DIR%/*}/databases/Copla_RS84/CoplaDB.fofn \
+        ${SH_DIR%/*}/test/NZ_CP028167.1.fna_output \
         -a test/NZ_CP028167.1.faa \
         -t circular \
         -k Bacteria \
@@ -17,16 +20,16 @@ bin/copla.py test/NZ_CP028167.1.fna \
         -f Enterobacteriaceae \
         -g Escherichia \
         -s 'Escherichia coli' | \
-    tee test/NZ_CP028167.1.fna_stdout
+    tee ${SH_DIR%/*}/test/NZ_CP028167.1.fna_stdout
 
-tar -zcf test/NZ_CP028167.1.new.tgz -C test NZ_CP028167.1.fna_output/
+tar -zcf ${SH_DIR%/*}/test/NZ_CP028167.1.new.tgz -C ${SH_DIR%/*}/test NZ_CP028167.1.fna_output/
 
 # NZ_CP028329.1
-bin/copla.py test/NZ_CP028329.1.fna \
-        databases/Copla_RS84/RS84f_sHSBM.pickle \
-        databases/Copla_RS84/CoplaDB.fofn \
-        test/NZ_CP028329.1.fna_output \
-        -a test/NZ_CP028329.1.faa \
+bin/copla.py ${SH_DIR%/*}/test/NZ_CP028329.1.fna \
+        ${SH_DIR%/*}/databases/Copla_RS84/RS84f_sHSBM.pickle \
+        ${SH_DIR%/*}/databases/Copla_RS84/CoplaDB.fofn \
+        ${SH_DIR%/*}/test/NZ_CP028329.1.fna_output \
+        -a ${SH_DIR%/*}/test/NZ_CP028329.1.faa \
         -t circular \
         -k Bacteria \
         -p Firmicutes \
@@ -35,6 +38,6 @@ bin/copla.py test/NZ_CP028329.1.fna \
         -f Lactobacillaceae \
         -g Lactobacillus \
         -s 'Lactobacillus sp. D1501' | \
-    tee test/NZ_CP028329.1.fna_stdout
+    tee ${SH_DIR%/*}/test/NZ_CP028329.1.fna_stdout
 
-tar -zcf test/NZ_CP028329.1.new.tgz -C test NZ_CP028329.1.fna_output/
+tar -zcf ${SH_DIR%/*}/test/NZ_CP028329.1.new.tgz -C ${SH_DIR%/*}/test NZ_CP028329.1.fna_output/

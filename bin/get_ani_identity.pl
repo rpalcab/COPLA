@@ -15,6 +15,7 @@ use strict;
 use warnings;
 use List::Util qw[min];
 use File::Basename qw[basename];
+use Cwd 'abs_path';
 
 my $num_args = $#ARGV + 1;
 if ($num_args != 2) {
@@ -30,6 +31,11 @@ my $fname_tmp = $work_dir . basename($fname_qry) . '.tmp';
 my $len_qry;
 my $seq = '';
 my $line;
+
+# File directory to avoid relative paths
+my $script_path = abs_path($0);
+my $script_dir = dirname($script_path);
+my $parent_dir = dirname($script_dir);
 
 # Join multifasta contigs into one contig. TODO: Check other strategies (row of Ns, sort by length, ...)
 system("mkdir -p $work_dir");
@@ -51,7 +57,8 @@ $len_qry = length($seq);
 
 #system("echo $threads > $threads_conf");
 #system("cat $ref_fofn | parallel -j $threads_conf bin/get_ani_identity_job.pl $fname_tmp $len_qry {}");
-system("cat $ref_fofn | parallel bin/get_ani_identity_job.pl $fname_tmp $len_qry {}");
+
+system("cat $ref_fofn | parallel $parent_dir/bin/get_ani_identity_job.pl $fname_tmp $len_qry {}");
 
 opendir my $DIR, $work_dir or die "Unable to open directory $work_dir: $!\n";
 my @files = grep(/\.tsv$/, readdir($DIR));

@@ -15,6 +15,7 @@ use strict;
 use warnings;
 use List::Util qw[min];
 use File::Basename qw[basename fileparse];
+use Cwd 'abs_path';
 
 my $num_args = $#ARGV + 1;
 if ($num_args != 3) {
@@ -37,6 +38,11 @@ my $len_ref;
 my $len_core;
 my $threshold;
 
+# File directory to avoid relative paths
+my $script_path = abs_path($0);
+my $script_dir = dirname($script_path);
+my $parent_dir = dirname($script_dir);
+
 # Get reference sequence length
 my $seq = '';
 my $line;
@@ -55,4 +61,4 @@ if ($len_core <= $window) {
     $threshold = 1 + int(($len_core - $window) / $step);
 }
 
-system("bin/ani.rb -1 $fname_qry -2 $fname_ref -T $fname_tsv -n $threshold -w $window -s $step -d 3 -t 1 -q > /dev/null 2>&1");
+system("$parent_dir/bin/ani.rb -1 $fname_qry -2 $fname_ref -T $fname_tsv -n $threshold -w $window -s $step -d 3 -t 1 -q > /dev/null 2>&1");
