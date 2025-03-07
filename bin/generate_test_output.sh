@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SH_DIR=$(dirname "$0")
+SH_DIR=$(dirname $(realpath "$0"))
 
 EXE_CONDA_PATH=`which conda`
 source "$(dirname $(realpath "${EXE_CONDA_PATH%/*}"))"/etc/profile.d/conda.sh

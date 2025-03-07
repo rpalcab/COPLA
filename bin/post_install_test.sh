@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SH_DIR=$(dirname "$0")
+SH_DIR=$(dirname $(realpath "$0"))
 
 main(){
     check_bash
