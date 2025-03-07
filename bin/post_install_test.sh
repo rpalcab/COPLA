@@ -300,7 +300,7 @@ test_plasmid_NZ_CP028167(){
 test_plasmid_NZ_CP028329(){
     SEQ_FNA="${SH_DIR%/*}/test/NZ_CP028329.1.fna"
 
-    COPLA_DB=`grep '^COPLA_DB_DIR' copla.ini | cut -f2`
+    COPLA_DB=`grep '^COPLA_DB_DIR' ${SH_DIR%/*}/copla.ini | cut -f2`
     OUTPUT_DIR=${SEQ_FNA}_output
     OUTPUT=${SEQ_FNA}_stdout
     TMP_FILE=${SEQ_FNA}_tmp

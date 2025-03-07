@@ -25,7 +25,7 @@ ${SH_DIR%/*}/bin/copla.py ${SH_DIR%/*}/test/NZ_CP028167.1.fna \
 tar -zcf ${SH_DIR%/*}/test/NZ_CP028167.1.new.tgz -C ${SH_DIR%/*}/test NZ_CP028167.1.fna_output/
 
 # NZ_CP028329.1
-bin/copla.py ${SH_DIR%/*}/test/NZ_CP028329.1.fna \
+${SH_DIR%/*}/bin/copla.py ${SH_DIR%/*}/test/NZ_CP028329.1.fna \
         ${SH_DIR%/*}/databases/Copla_RS84/RS84f_sHSBM.pickle \
         ${SH_DIR%/*}/databases/Copla_RS84/CoplaDB.fofn \
         ${SH_DIR%/*}/test/NZ_CP028329.1.fna_output \
