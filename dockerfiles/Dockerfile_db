@@ -51,7 +51,10 @@ RUN wget https://github.com/lmrodriguezr/enveomics/raw/master/Scripts/ani.rb -P 
     chmod +x /data/app/bin/ani.rb
 
 # Crear un enlace simbólico para que el ejecutable se encuentre en PATH
-RUN ln -s /data/app/bin/copla.py /usr/local/bin/copla
+RUN ln -s /data/app/bin/copla.py /usr/local/bin/copla && \
+    ln -s /data/app/bin/download_Copla_databases.sh /usr/local/bin/download_Copla_databases && \
+    ln -s /data/app/bin/generate_test_output.sh /usr/local/bin/generate_test_output && \
+    ln -s /data/app/bin/post_install_test.sh /usr/local/bin/post_install_test
 
 # Descargar bases de datos de COPLA
 RUN /data/app/bin/download_Copla_databases.sh
